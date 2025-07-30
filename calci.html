@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOM Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .calculator {
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+      width: 300px;
+    }
+    .display {
+      height: 50px;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      text-align: right;
+      padding-right: 10px;
+    }
+    .btn {
+      width: 60px;
+      height: 60px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const container = document.createElement('div');
+    container.className = 'calculator';
+
+    const display = document.createElement('input');
+    display.className = 'form-control mb-3 display';
+    display.setAttribute('readonly', true);
+    container.appendChild(display);
+
+    const buttons = [
+      ['7', '8', '9', '/'],
+      ['4', '5', '6', '*'],
+      ['1', '2', '3', '-'],
+      ['0', '%', '=', '+'],
+      ['C']
+    ];
+
+    buttons.forEach(row => {
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'd-flex justify-content-between mb-2';
+
+      row.forEach(btn => {
+        const button = document.createElement('button');
+        button.className = 'btn btn-primary';
+        button.textContent = btn;
+
+        button.addEventListener('click', () => handleClick(btn));
+
+        rowDiv.appendChild(button);
+      });
+
+      container.appendChild(rowDiv);
+    });
+
+    document.body.appendChild(container);
+
+    function handleClick(value) {
+      if (value === 'C') {
+        display.value = '';
+      } else if (value === '=') {
+        try {
+          display.value = eval(display.value);
+        } catch {
+          display.value = 'Error';
+        }
+      } else {
+        display.value += value;
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key >= '0' && e.key <= '9') {
+        display.value += e.key;
+      } else if (["+", "-", "*", "/", "%", "=", "Enter"].includes(e.key)) {
+        if (e.key === 'Enter') {
+          try {
+            display.value = eval(display.value);
+          } catch {
+            display.value = 'Error';
+          }
+        } else {
+          display.value += e.key;
+        }
+      } else if (e.key === 'Backspace') {
+        display.value = display.value.slice(0, -1);
+      } else {
+        alert("Only numbers are allowed");
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>
